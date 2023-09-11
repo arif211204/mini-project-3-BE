@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   Transaction.init(
     {
       cashier_id: DataTypes.INTEGER,
+      customer_name: DataTypes.STRING,
       product_id: DataTypes.INTEGER,
       total_price: DataTypes.INTEGER,
       transaction_date: DataTypes.DATE,
