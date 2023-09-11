@@ -17,4 +17,7 @@ app.use("/users", userRoutes);
 
 app.listen(PORT, () => {
   console.log(`server running on PORT: ${PORT}`);
+  // db.Role.sync({ alter: true });
+  // db.User.sync({ alter: true });
+  // db.sequelize.sync({ alter: true });
 });
