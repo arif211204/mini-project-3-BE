@@ -26,7 +26,7 @@ module.exports = {
         password: "claudia",
         createdAt: Sequelize.fn("now"),
         updatedAt: Sequelize.fn("now"),
-        role: 3,
+        role: 1,
       },
       {
         fullname: "David",
@@ -34,7 +34,7 @@ module.exports = {
         password: "David",
         createdAt: Sequelize.fn("now"),
         updatedAt: Sequelize.fn("now"),
-        role: 4,
+        role: 2,
       },
     ]);
   },
