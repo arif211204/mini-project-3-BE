@@ -5,15 +5,17 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     return queryInterface.bulkInsert("Roles", [
       {
-        role: "admin",
+        id: 1,
+        role_name: "admin",
         createdAt: Sequelize.fn("now"),
         updatedAt: Sequelize.fn("now"),
       },
       {
-        role: "cashier",
+        id: 2,
+        role_name: "cashier",
         createdAt: Sequelize.fn("now"),
         updatedAt: Sequelize.fn("now"),
-      }
+      },
     ]);
   },
 
