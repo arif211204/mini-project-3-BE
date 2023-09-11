@@ -61,14 +61,4 @@ db.Order.associate(db);
 db.Transaction.associate(db);
 db.ProductCategory.associate(db);
 
-
-db.User.associate(db);
-db.Role.associate(db);
-db.Product.associate(db);
-db.Order.associate(db);
-db.Transaction.associate(db);
-db.ProductCategory.associate(db);
-
-
-
 module.exports = db;

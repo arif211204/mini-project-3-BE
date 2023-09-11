@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const db = require("../models");
+const db = require("../sequelize/models");
 
 const productControllers = {
   async getAllProduct(req, res) {

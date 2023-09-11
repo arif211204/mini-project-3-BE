@@ -1,4 +1,4 @@
-const db = require("../models");
+const db = require("../sequelize/models");
 
 const userControllers = {
   getAll(req, res) {
