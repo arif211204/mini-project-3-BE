@@ -1,5 +1,5 @@
 const express = require("express");
-const { userRoutes } = require("./routes");
+const { userRoutes, productRoutes } = require("./routes");
 const cors = require("cors");
 require("dotenv").config();
 const app = express();
@@ -14,6 +14,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/users", userRoutes);
+app.use("/products", productRoutes);
 
 app.listen(PORT, () => {
   console.log(`server running on PORT: ${PORT}`);
