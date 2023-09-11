@@ -1,4 +1,5 @@
 const db = require("../models");
+const db = require("../sequelize/models");
 const jwt = require("jsonwebtoken");
 
 const productControllers = {
@@ -147,6 +148,15 @@ const productControllers = {
     } catch (err) {
       console.log(err);
       res.status(500).send(err?.message);
+    }
+  },
+  async getProductByQuery(req, res) {
+    const { category_name, product_name } = req.query;
+    if (category) {
+      const category = await db.ProductCategory.findOne({
+        where: { category_name: { [Op.like]: `%${category_name}%` } },
+      });
+      console.log(category);
     }
   },
 };

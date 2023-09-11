@@ -6,7 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 2200;
 
 app.use(express.json());
-const db = require("./models");
+const db = require("./sequelize/models");
 app.use(cors());
 
 app.get("/", (req, res) => {
