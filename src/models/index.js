@@ -50,4 +50,14 @@ db.Sequelize = Sequelize;
 db.User = require("./user")(sequelize, Sequelize);
 db.Role = require("./role")(sequelize, Sequelize);
 
+
+db.User.associate(db);
+db.Role.associate(db);
+db.Product.associate(db);
+db.Order.associate(db);
+db.Transaction.associate(db);
+db.ProductCategory.associate(db);
+
+
+
 module.exports = db;

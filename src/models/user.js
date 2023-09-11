@@ -9,14 +9,22 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.hasMany(models.Transaction, { foreignKey: "cashier_id" });
+      User.hasMany(models.Order, { foreignKey: "cashier_id" });
+      User.belongsTo(models.Role, { foreignKey: "id" });
     }
   }
   User.init(
     {
-      fullname: DataTypes.STRING,
+
+      role_id: DataTypes.INTEGER,
+      image_profie: DataTypes.STRING,
+      first_name: DataTypes.STRING,
+      last_name: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
-      role: DataTypes.INTEGER,
+      gender: DataTypes.ENUM("MALE", "FEMALE"),
+
     },
     {
       sequelize,
