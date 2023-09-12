@@ -18,7 +18,7 @@ app.use("/products", productRoutes);
 
 app.listen(PORT, () => {
   console.log(`server running on PORT: ${PORT}`);
-  // db.Role.sync({ alter: true });
+  // db.Role.sync({ force: true });
   // db.User.sync({ alter: true });
   // db.sequelize.sync({ alter: true });
 });
