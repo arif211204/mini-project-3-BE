@@ -42,6 +42,30 @@ const userControllers = {
         res.status(500).send(err?.message);
       });
   },
+
+  async newCashier(req, res) {
+    try {
+      const isCashierExist = await db.User.findOne({
+        where: {
+          email: { [db.Sequelize.Op.like]: `%${req.body.email}%` },
+        },
+      });
+
+      console.log(isCashierExist);
+
+      if (isCashierExist?.dataValues?.id) {
+        throw new Error("email sudah terdaftar");
+      }
+
+      req.body.password = await bcrypt.hash(req.body.password, 10);
+
+      db.User.create({ ...req.body }).then((result) => {
+        res.send({ message: "success", data: result });
+      });
+    } catch (error) {
+      res.status(500).send(error?.message);
+    }
+  },
 };
 
 module.exports = userControllers;
