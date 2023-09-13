@@ -1,4 +1,6 @@
 const db = require("../sequelize/models");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const userControllers = {
   getAll(req, res) {
@@ -12,20 +14,83 @@ const userControllers = {
     await db.User.findOne({
       where: {
         email,
-        password,
       },
     })
-      .then((result) => {
-        if (!result) {
-          throw new Error("wrong email/password");
+      .then(async (result) => {
+        const isValid = await bcrypt.compare(
+          password,
+          result.dataValues.password
+        );
+
+        if (!isValid) {
+          throw new Error("wrong password");
         }
         delete result.dataValues.password;
 
-        return res.status(200).send(result);
+        const payload = {
+          id: result.dataValues.id,
+          role_id: result.dataValues.role_id,
+        };
+
+        const token = jwt.sign(payload, process.env.jwt_secret, {
+          expiresIn: "1h",
+        });
+
+        return res.status(200).send({ token, user: result });
       })
       .catch((err) => {
         res.status(500).send(err?.message);
       });
+  },
+
+  async newCashier(req, res) {
+    try {
+      const isCashierExist = await db.User.findOne({
+        where: {
+          email: { [db.Sequelize.Op.like]: `%${req.body.email}%` },
+        },
+      });
+
+      if (isCashierExist?.dataValues?.id) {
+        throw new Error("email sudah terdaftar");
+      }
+
+      req.body.password = await bcrypt.hash(req.body.password, 10);
+
+      db.User.create({ ...req.body }).then((result) => {
+        res.send({ message: "success", data: result });
+      });
+    } catch (error) {
+      res.status(500).send(error?.message);
+    }
+  },
+
+  async passwordValidation(req, res) {
+    try {
+      await db.User.findOne({
+        where: {
+          email: req.body.email,
+        },
+      })
+        .then(async (result) => {
+          const isValid = await bcrypt.compare(
+            req.body.password,
+            result.dataValues.password
+          );
+
+          if (!isValid) {
+            throw new Error("wrong password");
+          }
+          delete result.dataValues.password;
+
+          return res.status(200).send(result);
+        })
+        .catch((err) => {
+          res.status(500).send(err?.message);
+        });
+    } catch (error) {
+      res.status(500).send(error?.message);
+    }
   },
 };
 
