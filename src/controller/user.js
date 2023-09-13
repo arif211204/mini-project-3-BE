@@ -51,8 +51,6 @@ const userControllers = {
         },
       });
 
-      console.log(isCashierExist);
-
       if (isCashierExist?.dataValues?.id) {
         throw new Error("email sudah terdaftar");
       }
@@ -62,6 +60,34 @@ const userControllers = {
       db.User.create({ ...req.body }).then((result) => {
         res.send({ message: "success", data: result });
       });
+    } catch (error) {
+      res.status(500).send(error?.message);
+    }
+  },
+
+  async passwordValidation(req, res) {
+    try {
+      await db.User.findOne({
+        where: {
+          email: req.body.email,
+        },
+      })
+        .then(async (result) => {
+          const isValid = await bcrypt.compare(
+            req.body.password,
+            result.dataValues.password
+          );
+
+          if (!isValid) {
+            throw new Error("wrong password");
+          }
+          delete result.dataValues.password;
+
+          return res.status(200).send(result);
+        })
+        .catch((err) => {
+          res.status(500).send(err?.message);
+        });
     } catch (error) {
       res.status(500).send(error?.message);
     }
