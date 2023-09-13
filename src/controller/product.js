@@ -2,14 +2,32 @@ const db = require("../sequelize/models");
 const jwt = require("jsonwebtoken");
 
 const productControllers = {
-  getAll(req, res) {
-    db.Product.findAll()
-      .then((result) => {
-        res.send(result);
-      })
-      .catch((err) => {
-        res.status(500).send(err?.message);
+  async getAll(req, res) {
+    try {
+      const page = parseInt(req.query.page);
+      const pageSize = parseInt(req.query.pageSize);
+
+      const offset = (page - 1) * pageSize;
+
+      db.Product.findAndCountAll({
+        offset,
+        limit: pageSize,
+      }).then((result) => {
+        const { count, rows } = result;
+        res.send({
+          totalItems: count,
+          totalPages: Math.ceil(count / pageSize),
+          currentPage: page,
+          pageSize,
+          product: rows,
+        });
       });
+    } catch (err) {
+      res.json({
+        status: 500,
+        message: err?.message,
+      });
+    }
   },
   getProductById(req, res) {
     const { id } = req.params;

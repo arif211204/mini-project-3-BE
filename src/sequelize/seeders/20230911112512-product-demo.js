@@ -57,6 +57,94 @@ module.exports = {
         createdAt: Sequelize.fn("now"),
         updatedAt: Sequelize.fn("now"),
       },
+      {
+        image:
+          "https://static.thehoneycombers.com/wp-content/uploads/sites/4/2016/01/best-cafes-coffee-shops-kemang-jakarta-indonesia-900x642.jpg",
+        product_name: "Best Coffee",
+        description: "Varian love",
+        category_id: 1,
+        price: 12000,
+        stock: 22,
+        createdAt: Sequelize.fn("now"),
+        updatedAt: Sequelize.fn("now"),
+      },
+      {
+        image:
+          "https://static.thehoneycombers.com/wp-content/uploads/sites/4/2016/01/best-cafes-coffee-shops-kemang-jakarta-indonesia-900x642.jpg",
+        product_name: "Best Coffee",
+        description: "Varian love",
+        category_id: 1,
+        price: 12000,
+        stock: 22,
+        createdAt: Sequelize.fn("now"),
+        updatedAt: Sequelize.fn("now"),
+      },
+      {
+        image:
+          "https://static.thehoneycombers.com/wp-content/uploads/sites/4/2016/01/best-cafes-coffee-shops-kemang-jakarta-indonesia-900x642.jpg",
+        product_name: "Best Coffee",
+        description: "Varian love",
+        category_id: 1,
+        price: 12000,
+        stock: 22,
+        createdAt: Sequelize.fn("now"),
+        updatedAt: Sequelize.fn("now"),
+      },
+      {
+        image:
+          "https://static.thehoneycombers.com/wp-content/uploads/sites/4/2016/01/best-cafes-coffee-shops-kemang-jakarta-indonesia-900x642.jpg",
+        product_name: "Best Coffee",
+        description: "Varian love",
+        category_id: 1,
+        price: 12000,
+        stock: 22,
+        createdAt: Sequelize.fn("now"),
+        updatedAt: Sequelize.fn("now"),
+      },
+      {
+        image:
+          "https://static.thehoneycombers.com/wp-content/uploads/sites/4/2016/01/best-cafes-coffee-shops-kemang-jakarta-indonesia-900x642.jpg",
+        product_name: "Best Coffee",
+        description: "Varian love",
+        category_id: 1,
+        price: 12000,
+        stock: 22,
+        createdAt: Sequelize.fn("now"),
+        updatedAt: Sequelize.fn("now"),
+      },
+      {
+        image:
+          "https://static.thehoneycombers.com/wp-content/uploads/sites/4/2016/01/best-cafes-coffee-shops-kemang-jakarta-indonesia-900x642.jpg",
+        product_name: "Best Coffee",
+        description: "Varian love",
+        category_id: 1,
+        price: 12000,
+        stock: 22,
+        createdAt: Sequelize.fn("now"),
+        updatedAt: Sequelize.fn("now"),
+      },
+      {
+        image:
+          "https://static.thehoneycombers.com/wp-content/uploads/sites/4/2016/01/best-cafes-coffee-shops-kemang-jakarta-indonesia-900x642.jpg",
+        product_name: "Best Coffee",
+        description: "Varian love",
+        category_id: 1,
+        price: 12000,
+        stock: 22,
+        createdAt: Sequelize.fn("now"),
+        updatedAt: Sequelize.fn("now"),
+      },
+      {
+        image:
+          "https://static.thehoneycombers.com/wp-content/uploads/sites/4/2016/01/best-cafes-coffee-shops-kemang-jakarta-indonesia-900x642.jpg",
+        product_name: "Best Coffee",
+        description: "Varian love",
+        category_id: 1,
+        price: 12000,
+        stock: 22,
+        createdAt: Sequelize.fn("now"),
+        updatedAt: Sequelize.fn("now"),
+      },
     ]);
   },
 
