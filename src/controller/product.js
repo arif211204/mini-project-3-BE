@@ -82,6 +82,34 @@ const productControllers = {
         res.status(500).send(err?.message);
       });
   },
+  getProductByCategorySorting(req, res) {
+    const { order } = req.query;
+    let sortingOrder = "ASC";
+    if (order === "desc") {
+      sortingOrder = "DESC";
+    }
+    db.Product.findAll({
+      order: [["category_id", sortingOrder]],
+    })
+      .then((result) => res.send(result))
+      .catch((err) => {
+        res.status(500).send(err?.message);
+      });
+  },
+  getProductByStockSorting(req,res) {
+    const { order } = req.query;
+    let sortingOrder = "ASC";
+    if (order === "desc") {
+      sortingOrder = "DESC";
+    }
+    db.Product.findAll({
+      order: [["stock", sortingOrder]],
+    })
+      .then((result) => res.send(result))
+      .catch((err) => {
+        res.status(500).send(err?.message);
+      });
+  },
 
   async createProduct(req, res) {
     const { token } = req;
