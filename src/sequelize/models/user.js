@@ -12,12 +12,10 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Transaction, { foreignKey: "cashier_id" });
       User.hasMany(models.Order, { foreignKey: "cashier_id" });
       User.belongsTo(models.Role, { foreignKey: "role_id" });
-
     }
   }
   User.init(
     {
-
       role_id: DataTypes.INTEGER,
       image_profie: DataTypes.STRING,
       first_name: DataTypes.STRING,
@@ -25,7 +23,10 @@ module.exports = (sequelize, DataTypes) => {
       email: DataTypes.STRING,
       password: DataTypes.STRING,
       gender: DataTypes.ENUM("MALE", "FEMALE"),
-
+      isDisable: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       sequelize,

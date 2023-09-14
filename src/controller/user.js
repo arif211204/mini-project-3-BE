@@ -140,6 +140,36 @@ const userControllers = {
       res.status(500).send(error?.message);
     }
   },
+
+  async disableCashier(req, res) {
+    try {
+      const user = await db.User.findOne({
+        where: {
+          email: req.body.email,
+        },
+      });
+
+      if (!user) {
+        return res.status(400).send({ error: "user not found" });
+      }
+
+      const isDisable = req.body.isDisable;
+
+      // Update the user's isDisable column to true
+      await user.update({
+        isDisable: isDisable,
+      });
+
+      const message = isDisable
+        ? "User Disabled Succesfully"
+        : "User enabled succesfully";
+
+      return res.status(200).send({ message });
+    } catch (error) {
+      return res.status(500).send(error?.message);
+    }
+  },
+
 };
 
 module.exports = userControllers;
