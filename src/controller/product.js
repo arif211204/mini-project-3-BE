@@ -4,8 +4,8 @@ const jwt = require("jsonwebtoken");
 const productControllers = {
   async getAll(req, res) {
     try {
-      const page = parseInt(req.query.page);
-      const pageSize = parseInt(req.query.pageSize);
+      const page = parseInt(req.query.page) || 1;
+      const pageSize = parseInt(req.query.pageSize) || 5;
 
       const offset = (page - 1) * pageSize;
 
