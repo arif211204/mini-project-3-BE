@@ -40,9 +40,11 @@ const productControllers = {
       });
   },
 
+
   async getProductByFilter(req, res) {
     const { product_name, category_id, page, pageSize } = req.query;
     const offset = (page - 1) * pageSize;
+
     try {
       let products = [];
 
@@ -55,6 +57,7 @@ const productControllers = {
           },
           limit: parseInt(pageSize),
           offset: offset,
+
         });
       }
 
@@ -65,8 +68,10 @@ const productControllers = {
               [db.Sequelize.Op.like]: `%${category_id}%`,
             },
           },
+
           limit: parseInt(pageSize),
           offset: offset,
+
         });
         products = [...products, ...categoryProducts];
       }
@@ -99,6 +104,34 @@ const productControllers = {
     }
     db.Product.findAll({
       order: [["price", sortingOrder]],
+    })
+      .then((result) => res.send(result))
+      .catch((err) => {
+        res.status(500).send(err?.message);
+      });
+  },
+  getProductByCategorySorting(req, res) {
+    const { order } = req.query;
+    let sortingOrder = "ASC";
+    if (order === "desc") {
+      sortingOrder = "DESC";
+    }
+    db.Product.findAll({
+      order: [["category_id", sortingOrder]],
+    })
+      .then((result) => res.send(result))
+      .catch((err) => {
+        res.status(500).send(err?.message);
+      });
+  },
+  getProductByStockSorting(req,res) {
+    const { order } = req.query;
+    let sortingOrder = "ASC";
+    if (order === "desc") {
+      sortingOrder = "DESC";
+    }
+    db.Product.findAll({
+      order: [["stock", sortingOrder]],
     })
       .then((result) => res.send(result))
       .catch((err) => {
