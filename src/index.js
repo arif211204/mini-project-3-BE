@@ -21,5 +21,5 @@ app.listen(PORT, () => {
   // db.Role.sync({ alter: true });
 
   // db.User.sync({ alter: true });
-  db.sequelize.sync({ alter: true });
+  // db.sequelize.sync({ alter: true });
 });

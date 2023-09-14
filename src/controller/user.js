@@ -127,6 +127,19 @@ const userControllers = {
       res.status(400).send(error?.message);
     }
   },
+
+  async getAllCashier(req, res) {
+    try {
+      const cashier = await db.User.findAll({
+        where: {
+          role_id: 2,
+        },
+      });
+      res.send(cashier);
+    } catch (error) {
+      res.status(500).send(error?.message);
+    }
+  },
 };
 
 module.exports = userControllers;
