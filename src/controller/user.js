@@ -67,6 +67,7 @@ const userControllers = {
 
   async passwordValidation(req, res) {
     try {
+      console.log(req.body);
       await db.User.findOne({
         where: {
           email: req.body.email,
@@ -90,6 +91,40 @@ const userControllers = {
         });
     } catch (error) {
       res.status(500).send(error?.message);
+    }
+  },
+
+  async getUserById(req, res) {
+    try {
+      const user = await db.User.findByPk(req.params.id);
+
+      res.send(user);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  async keepLogin(req, res) {
+    try {
+      const { token } = req;
+      const payload = jwt.verify(token, process.env.jwt_secret);
+
+      if (!payload?.id) throw new Error("invalid token");
+      const user = await db.User.findByPk(payload.id);
+      delete user.dataValues.password;
+
+      const newToken = jwt.sign(
+        {
+          id: user.dataValues.id,
+          role_id: user.dataValues.role_id,
+        },
+        process.env.jwt_secret,
+        { expiresIn: "59min" }
+      );
+
+      return res.send({ token: newToken, user: user.dataValues });
+    } catch (error) {
+      res.status(400).send(error?.message);
     }
   },
 };
