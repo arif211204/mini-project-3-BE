@@ -4,7 +4,9 @@ const jwt = require("jsonwebtoken");
 
 const productControllers = {
   getAll(req, res) {
-    db.Product.findAll()
+    db.Product.findAll({
+      order: [["updatedAt", "DESC"]],
+    })
       .then((result) => {
         res.send(result);
       })
@@ -23,7 +25,8 @@ const productControllers = {
       });
   },
   async getProductByFilter(req, res) {
-    const { product_name, category_id } = req.query;
+    const { product_name, category_id, orderby, sortby } = req.query;
+    console.log(req.query);
     const search = {
       product_name: {
         [db.Sequelize.Op.like]: `%${product_name}%`,
@@ -33,13 +36,20 @@ const productControllers = {
       search.category_id = {
         [db.Sequelize.Op.like]: `%${category_id}%`,
       };
-
+    const sorting = {
+      order: [["updatedAt", "DESC"]],
+    };
+    if (orderby && sortby) {
+      console.log("hello");
+      sorting.order = [[orderby, sortby]];
+    }
     try {
       console.log(search);
       const products = await db.Product.findAll({
         where: {
           ...search,
         },
+        ...sorting,
       });
       res.status(200).json(products);
     } catch (err) {

@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 
 app.use("/users", userRoutes);
 app.use("/products", productRoutes);
-app.use('/image-static', express.static(`${__dirname}/public/images/product`));
+app.use('/static', express.static(`${__dirname}/public/images/product`));
 
 app.listen(PORT, () => {
   console.log(`server running on PORT: ${PORT}`);
