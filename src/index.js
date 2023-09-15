@@ -1,5 +1,10 @@
 const express = require("express");
-const { userRoutes, productRoutes } = require("./routes");
+const {
+  userRoutes,
+  productRoutes,
+  productcategoriyRoutes,
+  orderRoutes,
+} = require("./routes");
 const cors = require("cors");
 require("dotenv").config();
 const app = express();
@@ -15,6 +20,8 @@ app.get("/", (req, res) => {
 
 app.use("/users", userRoutes);
 app.use("/products", productRoutes);
+app.use("/productcategory", productcategoriyRoutes);
+app.use("/orders", orderRoutes);
 
 app.listen(PORT, () => {
   console.log(`server running on PORT: 🚀${PORT}🚀`);

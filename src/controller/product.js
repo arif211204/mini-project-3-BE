@@ -40,7 +40,6 @@ const productControllers = {
       });
   },
 
-
   async getProductByFilter(req, res) {
     const { product_name, category_id, page, pageSize } = req.query;
     const offset = (page - 1) * pageSize;
@@ -57,7 +56,6 @@ const productControllers = {
           },
           limit: parseInt(pageSize),
           offset: offset,
-
         });
       }
 
@@ -71,7 +69,6 @@ const productControllers = {
 
           limit: parseInt(pageSize),
           offset: offset,
-
         });
         products = [...products, ...categoryProducts];
       }
@@ -124,7 +121,7 @@ const productControllers = {
         res.status(500).send(err?.message);
       });
   },
-  getProductByStockSorting(req,res) {
+  getProductByStockSorting(req, res) {
     const { order } = req.query;
     let sortingOrder = "ASC";
     if (order === "desc") {

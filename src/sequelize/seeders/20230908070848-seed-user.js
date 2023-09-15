@@ -19,18 +19,6 @@ module.exports = {
       },
       {
         id: 2,
-        role_id: 1,
-        image_profie: "",
-        first_name: "Admin",
-        last_name: "sangar",
-        email: "admin@mail.com",
-        password: await bcrypt.hash("admin", 10),
-        gender: "male",
-        createdAt: Sequelize.fn("now"),
-        updatedAt: Sequelize.fn("now"),
-      },
-      {
-        id: 3,
         role_id: 2,
         image_profie: "",
         first_name: "Ucup",
@@ -42,7 +30,7 @@ module.exports = {
         updatedAt: Sequelize.fn("now"),
       },
       {
-        id: 4,
+        id: 3,
         role_id: 2,
         image_profie: "",
         first_name: "marisa",
@@ -54,7 +42,7 @@ module.exports = {
         updatedAt: Sequelize.fn("now"),
       },
       {
-        id: 5,
+        id: 4,
         role_id: 2,
         image_profie: "",
         first_name: "reni",
