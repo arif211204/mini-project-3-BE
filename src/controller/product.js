@@ -3,16 +3,41 @@ const db = require("../sequelize/models");
 const jwt = require("jsonwebtoken");
 
 const productControllers = {
-  getAll(req, res) {
-    db.Product.findAll({
-      order: [["updatedAt", "DESC"]],
-    })
-      .then((result) => {
-        res.send(result);
-      })
-      .catch((err) => {
-        res.status(500).send(err?.message);
+//   getAll(req, res) {
+//     db.Product.findAll({
+//       order: [["updatedAt", "DESC"]],
+//     })
+//       .then((result) => {
+//         res.send(result);
+//       })
+//       .catch((err) => {
+//         res.status(500).send(err?.message);
+  async getAll(req, res) {
+    try {
+      const page = parseInt(req.query.page) || 1;
+      const pageSize = parseInt(req.query.pageSize) || 5;
+
+      const offset = (page - 1) * pageSize;
+
+      db.Product.findAndCountAll({
+        offset,
+        limit: pageSize,
+      }).then((result) => {
+        const { count, rows } = result;
+        res.send({
+          totalItems: count,
+          totalPages: Math.ceil(count / pageSize),
+          currentPage: page,
+          pageSize,
+          product: rows,
+        });
       });
+    } catch (err) {
+      res.json({
+        status: 500,
+        message: err?.message,
+      });
+    }
   },
   getProductById(req, res) {
     const { id } = req.params;
@@ -24,6 +49,7 @@ const productControllers = {
         res.status(500).send(err?.message);
       });
   },
+
   async getProductByFilter(req, res) {
     const { product_name, category_id, orderby, sortby } = req.query;
     console.log(req.query);
@@ -51,6 +77,37 @@ const productControllers = {
         },
         ...sorting,
       });
+//     const { product_name, category_id, page, pageSize } = req.query;
+//     const offset = (page - 1) * pageSize;
+
+//     try {
+//       let products = [];
+
+//       if (product_name) {
+//         products = await db.Product.findAll({
+//           where: {
+//             product_name: {
+//               [db.Sequelize.Op.like]: `%${product_name}%`,
+//             },
+//           },
+//           limit: parseInt(pageSize),
+//           offset: offset,
+//         });
+//       }
+
+//       if (category_id) {
+//         const categoryProducts = await db.Product.findAll({
+//           where: {
+//             category_id: {
+//               [db.Sequelize.Op.like]: `%${category_id}%`,
+//             },
+//           },
+
+//           limit: parseInt(pageSize),
+//           offset: offset,
+//         });
+//         products = [...products, ...categoryProducts];
+//       }
       res.status(200).json(products);
     } catch (err) {
       console.error(err);

@@ -14,12 +14,22 @@ module.exports = {
      */
     await queryInterface.bulkInsert("productcategories", [
       {
-        category_name: "Coffee",
+        category_name: "coffee",
         createdAt: Sequelize.fn("now"),
         updatedAt: Sequelize.fn("now"),
       },
       {
-        category_name: "Snack",
+        category_name: "noncoffee",
+        createdAt: Sequelize.fn("now"),
+        updatedAt: Sequelize.fn("now"),
+      },
+      {
+        category_name: "food",
+        createdAt: Sequelize.fn("now"),
+        updatedAt: Sequelize.fn("now"),
+      },
+      {
+        category_name: "snack",
         createdAt: Sequelize.fn("now"),
         updatedAt: Sequelize.fn("now"),
       },
