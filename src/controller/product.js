@@ -114,17 +114,21 @@ const productControllers = {
   async createProduct(req, res) {
     const { token } = req;
 
-    if (!token) {
-      return res.status(401).send("Harap Melakukan Login Terlebih Dahulu!");
-    }
+    // if (!token) {
+    //   return res.status(401).send("Harap Melakukan Login Terlebih Dahulu!");
+    // }
     try {
+      let userId = null;
+      if(token) {
       const dataToken = jwt.verify(token, process.env.jwt_secret);
+      userId = dataToken.id
+      }
       const productData = req.body;
 
       if (req.file) {
         productData.image = req.file.filename;
       }
-      productData.userid = dataToken.id;
+      productData.userid = userId;
 
       const productCreation = await db.Product.create(productData);
       res.status(200).json({
@@ -138,26 +142,26 @@ const productControllers = {
   },
   async editProduct(req, res) {
     const { id } = req.params;
-    const { token } = req;
+    // const { token } = req;
     const productData = req.body;
 
-    if (!token) {
-      return res
-        .status(401)
-        .json({ message: "Harap Melakukan Login Terlebih Dahulu!" });
-    }
+    // if (!token) {
+    //   return res
+    //     .status(401)
+    //     .json({ message: "Harap Melakukan Login Terlebih Dahulu!" });
+    // }
     try {
-      const dataToken = jwt.verify(token, process.env.jwt_secret);
+      // const dataToken = jwt.verify(token, process.env.jwt_secret);
       const existingProduct = await db.Product.findByPk(id);
 
       if (!existingProduct) {
         return res.status(404).json({ message: `Produk Tidak Ditemukan!` });
       }
-      if (existingProduct.userid !== dataToken.id) {
-        return res.status(403).json({
-          message: `Tidak Diizinkan: Kamu Bukan Administrator!`,
-        });
-      }
+      // if (existingProduct.userid !== dataToken.id) {
+      //   return res.status(403).json({
+      //     message: `Tidak Diizinkan: Kamu Bukan Administrator!`,
+      //   });
+      // }
       await existingProduct.update({ ...productData });
       res.status(200).json({
         message: `Produk ID ${id} Berhasil di Edit`,
