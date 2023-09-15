@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const db = require("../sequelize/models");
 const jwt = require("jsonwebtoken");
 
@@ -23,31 +24,23 @@ const productControllers = {
   },
   async getProductByFilter(req, res) {
     const { product_name, category_id } = req.query;
+    const search = {
+      product_name: {
+        [db.Sequelize.Op.like]: `%${product_name}%`,
+      },
+    };
+    if (category_id)
+      search.category_id = {
+        [db.Sequelize.Op.like]: `%${category_id}%`,
+      };
 
     try {
-      let products = [];
-
-      if (product_name) {
-        products = await db.Product.findAll({
-          where: {
-            product_name: {
-              [db.Sequelize.Op.like]: `%${product_name}%`,
-            },
-          },
-        });
-      }
-
-      if (category_id) {
-        const categoryProducts = await db.Product.findAll({
-          where: {
-            category_id: {
-              [db.Sequelize.Op.like]: `%${category_id}%`,
-            },
-          },
-        });
-        products = [...products, ...categoryProducts];
-      }
-
+      console.log(search);
+      const products = await db.Product.findAll({
+        where: {
+          ...search,
+        },
+      });
       res.status(200).json(products);
     } catch (err) {
       console.error(err);
@@ -96,7 +89,7 @@ const productControllers = {
         res.status(500).send(err?.message);
       });
   },
-  getProductByStockSorting(req,res) {
+  getProductByStockSorting(req, res) {
     const { order } = req.query;
     let sortingOrder = "ASC";
     if (order === "desc") {
@@ -119,9 +112,9 @@ const productControllers = {
     // }
     try {
       let userId = null;
-      if(token) {
-      const dataToken = jwt.verify(token, process.env.jwt_secret);
-      userId = dataToken.id
+      if (token) {
+        const dataToken = jwt.verify(token, process.env.jwt_secret);
+        userId = dataToken.id;
       }
       const productData = req.body;
 
