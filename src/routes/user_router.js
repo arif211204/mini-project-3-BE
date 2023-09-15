@@ -14,4 +14,6 @@ route.get("/:id", userControllers.getUserById);
 
 route.patch("/disable", userControllers.disableCashier);
 
+route.delete("/delete/:email", userControllers.delete);
+
 module.exports = route;
