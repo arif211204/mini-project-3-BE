@@ -20,6 +20,7 @@ app.get("/", (req, res) => {
 
 app.use("/users", userRoutes);
 app.use("/products", productRoutes);
+app.use('/static', express.static(`${__dirname}/public/images/product`));
 app.use("/productcategory", productcategoriyRoutes);
 app.use("/orders", orderRoutes);
 
