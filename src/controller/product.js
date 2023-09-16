@@ -212,6 +212,9 @@ const productControllers = {
     // }
     try {
       // const dataToken = jwt.verify(token, process.env.jwt_secret);
+      if (req.file) {
+        productData.image = req.file.filename;
+      }
       const existingProduct = await db.Product.findByPk(id);
 
       if (!existingProduct) {
@@ -235,29 +238,29 @@ const productControllers = {
   async deleteProduct(req, res) {
     const { id } = req.params;
     const { token } = req;
-
-    if (!token) {
-      return res
-        .status(401)
-        .json({ message: `Harap Melakukan Login Terlebih Dahulu` });
-    }
+    // if (!token) {
+    //   return res
+    //     .status(401)
+    //     .json({ message: `Harap Melakukan Login Terlebih Dahulu` });
+    // }
     try {
-      const dataToken = jwt.verify(token, process.env.jwt_secret);
-      const existingProduct = await db.Product.destroy(id);
+      // const dataToken = jwt.verify(token, process.env.jwt_secret);
+      // const existingProduct = await db.Product.destroy(id);
+      const existingProduct = await db.Product.findByPk(id);
       if (!existingProduct) {
         return res
           .status(404)
           .json({ message: `Produk ID ${id} Tidak Ditemukan!` });
       }
-      if (existingProduct.userid !== dataToken.id) {
-        return res
-          .status(403)
-          .json({ message: `Tidak Diizinkan: Kamu Bukan Administrator!` });
-      }
+      // if (existingProduct.userid !== dataToken.id) {
+      //   return res
+      //     .status(403)
+      //     .json({ message: `Tidak Diizinkan: Kamu Bukan Administrator!` });
+      // }
       await existingProduct.destroy();
       res.status(200).json({ message: `Produk ID ${id} Berhasil Dihapus!` });
     } catch (err) {
-      console.log(err);
+      console.log("Error deleting product:", err);
       res.status(500).send(err?.message);
     }
   },
