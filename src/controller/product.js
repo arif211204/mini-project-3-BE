@@ -12,25 +12,21 @@ const productControllers = {
   //     })
   //     .catch((err) => {
   //       res.status(500).send(err?.message)}}
-  async getAll(req, res) {
+  async getAllWithCategory(req, res) {
     try {
-      const page = parseInt(req.query.page) || 1;
-      const pageSize = parseInt(req.query.pageSize) || 5;
+      const { page, pageSize, category_id } = req.query;
 
       const offset = (page - 1) * pageSize;
-
-      db.Product.findAndCountAll({
-        offset,
-        limit: pageSize,
-      }).then((result) => {
-        const { count, rows } = result;
-        res.send({
-          totalItems: count,
-          totalPages: Math.ceil(count / pageSize),
-          currentPage: page,
-          pageSize,
-          product: rows,
-        });
+      console.log(parseInt(offset), "ini offset");
+      console.log(page, pageSize);
+      const products = await db.Product.findAll({
+        where: { category_id: category_id },
+        limit: parseInt(pageSize),
+        offset: offset,
+      });
+      res.json({
+        status: 200,
+        products,
       });
     } catch (err) {
       res.json({

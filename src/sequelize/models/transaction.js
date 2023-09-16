@@ -1,15 +1,19 @@
 "use strict";
-const { Model } = require("sequelize");
-const { Sequelize } = require(".");
-
+const { Model, Sequelize } = require("sequelize");
+const { v4: uuidv4 } = require("uuid");
 module.exports = (sequelize, DataTypes) => {
   class Transaction extends Model {
-    // ...
+    static associate(models) {
+      Transaction.belongsTo(models.User, { foreignKey: "cashier_id" });
+      Transaction.belongsTo(models.Product, { foreignKey: "product_id" });
+    }
   }
+
   Transaction.init(
     {
-      no_invoice: {
+      no_inv: {
         type: Sequelize.UUID,
+        defaultValue: Sequelize.DataTypes.UUIDV4,
         primaryKey: false,
       },
       cashier_id: DataTypes.INTEGER,
@@ -24,11 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  // Sequelize hook to generate UUID using nanoid
   Transaction.beforeCreate((transaction, options) => {
-    // Generate the UUID using nanoid
-    transaction.no_invoice = "ENV_" + nanoid();
+    transaction.no_inv = "NO-INV" + uuidv4();
   });
-
   return Transaction;
 };

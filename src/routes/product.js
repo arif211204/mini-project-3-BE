@@ -4,7 +4,7 @@ const isAdmin = require("../middlewares/adminValidator");
 const uploadFile = require("../middlewares/multer");
 const route = express.Router();
 
-route.get("/", productControllers.getAll);
+route.get("/", productControllers.getAllWithCategory);
 route.get("/search", productControllers.getProductByFilter);
 route.get("/name-sorting", productControllers.getProductByNameSorting);
 route.get("/price-sorting", productControllers.getProductsByPriceSorting);
@@ -14,8 +14,7 @@ route.get("/:id", productControllers.getProductById);
 
 route.post(
   "/",
-  uploadFile
-  ({
+  uploadFile({
     destinationFolder: "product",
     prefix: "New-Product",
     filetype: "image",
@@ -24,8 +23,7 @@ route.post(
 );
 route.patch(
   "/:id",
-  uploadFile
-  ({
+  uploadFile({
     destinationFolder: "product",
     prefix: "New-Product",
     filetype: "image",
