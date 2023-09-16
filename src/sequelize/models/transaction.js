@@ -1,21 +1,17 @@
 "use strict";
-const { Model, UUID } = require("sequelize");
+const { Model } = require("sequelize");
+const { Sequelize } = require(".");
+
 module.exports = (sequelize, DataTypes) => {
   class Transaction extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-      Transaction.belongsTo(models.User, { foreignKey: "cashier_id" });
-      Transaction.belongsTo(models.Product, { foreignKey: "product_id" });
-    }
+    // ...
   }
   Transaction.init(
     {
-      no_invoice: DataTypes.STRING,
+      no_invoice: {
+        type: Sequelize.UUID,
+        primaryKey: false,
+      },
       cashier_id: DataTypes.INTEGER,
       customer_name: DataTypes.STRING,
       product_id: DataTypes.INTEGER,
@@ -27,5 +23,12 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Transaction",
     }
   );
+
+  // Sequelize hook to generate UUID using nanoid
+  Transaction.beforeCreate((transaction, options) => {
+    // Generate the UUID using nanoid
+    transaction.no_invoice = "ENV_" + nanoid();
+  });
+
   return Transaction;
 };

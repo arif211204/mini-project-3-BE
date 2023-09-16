@@ -51,7 +51,7 @@ db.User = require("./user")(sequelize, Sequelize);
 db.Role = require("./role")(sequelize, Sequelize);
 db.Product = require("./product")(sequelize, Sequelize);
 db.Order = require("./order")(sequelize, Sequelize);
-db.Transaction = require("./transaction")(sequelize, Sequelize);
+db.Transaction = require("./transaction.js")(sequelize, Sequelize);
 db.ProductCategory = require("./productcategory")(sequelize, Sequelize);
 
 db.User.associate(db);
