@@ -4,6 +4,8 @@ const {
   productRoutes,
   productcategoriyRoutes,
   orderRoutes,
+  transactionDetailRoutes,
+  transactionRoutes,
 } = require("./routes");
 const cors = require("cors");
 require("dotenv").config();
@@ -20,14 +22,14 @@ app.get("/", (req, res) => {
 
 app.use("/users", userRoutes);
 app.use("/products", productRoutes);
-app.use('/static', express.static(`${__dirname}/public/images/product`));
-app.use("/productcategory", productcategoriyRoutes);
+app.use("/static", express.static(`${__dirname}/public/images/product`));
+app.use("/productcategories", productcategoriyRoutes);
 app.use("/orders", orderRoutes);
+app.use("/transactions", transactionRoutes);
+app.use("/transactiondetails", transactionDetailRoutes);
 
 app.listen(PORT, () => {
   console.log(`server running on PORT: 🚀${PORT}🚀`);
-  // db.Role.sync({ alter: true });
 
-  // db.User.sync({ alter: true });
   // db.sequelize.sync({ alter: true });
 });

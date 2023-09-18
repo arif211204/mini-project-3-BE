@@ -1,7 +1,5 @@
 "use strict";
 
-const { UUID, UUIDV1 } = require("sequelize");
-
 /** @type {import('sequelize-cli').Migration} */
 
 module.exports = {
@@ -15,14 +13,17 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
+
     await queryInterface.bulkInsert("transactions", [
       {
-        no_invoice: `ENV_${UUIDV1()}`,
-        cashier_id: 2,
-        customer_name: "ujang simo",
-        product_id: 2,
-        total_price: 230000,
-        transaction_date: Sequelize.fn("NOW"),
+        no_inv: "INV-01-%d&fs$fvd&v645njd&76464@",
+        total_price: 30000,
+        createdAt: Sequelize.fn("NOW"),
+        updatedAt: Sequelize.fn("NOW"),
+      },
+      {
+        no_inv: "INV-01-%dabf6567^%&sdhfh&v645njd&76464@",
+        total_price: 50000,
         createdAt: Sequelize.fn("NOW"),
         updatedAt: Sequelize.fn("NOW"),
       },
@@ -30,11 +31,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+    return queryInterface.bulkDelete("transactions", null, {});
   },
 };

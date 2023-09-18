@@ -3,34 +3,31 @@ const db = require("../sequelize/models");
 const jwt = require("jsonwebtoken");
 
 const productControllers = {
-  //   getAll(req, res) {
-  //     db.Product.findAll({
-  //       order: [["updatedAt", "DESC"]],
+  // async getAll(req, res) {
+  // getAll(req, res) {
+  //   db.Product.findAll({
+  //     order: [["updatedAt", "DESC"]],
+  //   })
+  //     .then((result) => {
+  //       res.send(result);
   //     })
-  //       .then((result) => {
-  //         res.send(result);
-  //       })
-  //       .catch((err) => {
-  //         res.status(500).send(err?.message);
-  async getAll(req, res) {
+  //     .catch((err) => {
+  //       res.status(500).send(err?.message)}}
+  async getAllWithCategory(req, res) {
     try {
-      const page = parseInt(req.query.page) || 1;
-      const pageSize = parseInt(req.query.pageSize) || 5;
+      const { page, pageSize, category_id } = req.query;
 
       const offset = (page - 1) * pageSize;
-
-      db.Product.findAndCountAll({
-        offset,
-        limit: pageSize,
-      }).then((result) => {
-        const { count, rows } = result;
-        res.send({
-          totalItems: count,
-          totalPages: Math.ceil(count / pageSize),
-          currentPage: page,
-          pageSize,
-          product: rows,
-        });
+      console.log(parseInt(offset), "ini offset");
+      console.log(page, pageSize);
+      const products = await db.Product.findAll({
+        where: { category_id: category_id },
+        limit: parseInt(pageSize),
+        offset: offset,
+      });
+      res.json({
+        status: 200,
+        products,
       });
     } catch (err) {
       res.json({
@@ -51,8 +48,10 @@ const productControllers = {
   },
 
   async getProductByFilter(req, res) {
-    const { product_name, category_id, orderby, sortby } = req.query;
-    console.log(req.query);
+    const { product_name, category_id, orderby, sortby, page, pageSize } =
+      req.query;
+    // console.log(req.query);
+    const offset = (page - 1) * pageSize;
     const search = {
       product_name: {
         [db.Sequelize.Op.like]: `%${product_name}%`,
@@ -71,11 +70,13 @@ const productControllers = {
     }
     try {
       console.log(search);
-      const products = await db.Product.findAll({
+      const product = await db.Product.findAll({
         where: {
           ...search,
         },
         ...sorting,
+        limit: parseInt(pageSize),
+        offset: offset,
       });
       //     const { product_name, category_id, page, pageSize } = req.query;
       //     const offset = (page - 1) * pageSize;
@@ -109,6 +110,7 @@ const productControllers = {
       //         products = [...products, ...categoryProducts];
       //       }
       res.status(200).json(products);
+      //res.json(product);
     } catch (err) {
       console.error(err);
       res.status(500).send("Error retrieving products.");
@@ -265,6 +267,7 @@ const productControllers = {
       res.status(500).send(err?.message);
     }
   },
+
   async getProductByQuery(req, res) {
     const { category_name, product_name } = req.query;
     if (category) {
@@ -273,6 +276,23 @@ const productControllers = {
       });
       console.log(category);
     }
+  },
+
+  async editCategoryProduct(req, res) {
+    const { categoryId, categoryName } = req.query;
+    const find = {
+      category_id: { [db.Sequelize.Op.like]: `%${categoryId}%` },
+    };
+
+    const category = await db.Product.findAll({
+      where: { ...find },
+      include: { model: db.ProductCategory, attributes: ["category_name"] },
+    });
+
+    res.json({
+      status: 200,
+      category,
+    });
   },
 };
 
