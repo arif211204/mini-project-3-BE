@@ -230,6 +230,7 @@ const productControllers = {
       res.status(500).send(err?.message);
     }
   },
+
   async getProductByQuery(req, res) {
     const { category_name, product_name } = req.query;
     if (category) {
@@ -238,6 +239,23 @@ const productControllers = {
       });
       console.log(category);
     }
+  },
+
+  async editCategoryProduct(req, res) {
+    const { categoryId, categoryName } = req.query;
+    const find = {
+      category_id: { [db.Sequelize.Op.like]: `%${categoryId}%` },
+    };
+
+    const category = await db.Product.findAll({
+      where: { ...find },
+      include: { model: db.ProductCategory, attributes: ["category_name"] },
+    });
+
+    res.json({
+      status: 200,
+      category,
+    });
   },
 };
 

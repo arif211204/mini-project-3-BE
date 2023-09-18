@@ -5,13 +5,14 @@ const uploadFile = require("../middlewares/multer");
 const route = express.Router();
 
 route.get("/", productControllers.getAllWithCategory);
+
 route.get("/search", productControllers.getProductByFilter);
 route.get("/name-sorting", productControllers.getProductByNameSorting);
 route.get("/price-sorting", productControllers.getProductsByPriceSorting);
 route.get("/category-sorting", productControllers.getProductByCategorySorting);
 route.get("/stock-sorting", productControllers.getProductByStockSorting);
 route.get("/:id", productControllers.getProductById);
-
+route.patch("/", productControllers.editCategoryProduct);
 route.post(
   "/",
   uploadFile({
