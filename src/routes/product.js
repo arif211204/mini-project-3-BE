@@ -6,14 +6,18 @@ const productMulter = require("../middlewares/multer");
 const route = express.Router();
 
 route.get("/", productControllers.getAllWithCategory);
-
+route.get("/withcategory", productControllers.getProductWithCategory);
 route.get("/search", productControllers.getProductByFilter);
 route.get("/name-sorting", productControllers.getProductByNameSorting);
 route.get("/price-sorting", productControllers.getProductsByPriceSorting);
 route.get("/category-sorting", productControllers.getProductByCategorySorting);
 route.get("/stock-sorting", productControllers.getProductByStockSorting);
 route.get("/:id", productControllers.getProductById);
-route.patch("/", productControllers.editCategoryProduct);
+
+route.patch(
+  "/editcategoryproduct/:id",
+  productControllers.editCategoryInProduct
+);
 route.post(
   "/",
   productMulter.productImageUploader().single("image"),
@@ -21,7 +25,7 @@ route.post(
 );
 route.patch(
   "/:id",
-  productMulter.productImageUploader().single('image'),
+  productMulter.productImageUploader().single("image"),
   productControllers.editProduct
 );
 route.delete("/:id", productControllers.deleteProduct);

@@ -7,6 +7,32 @@ const productCategoryController = {
       .then((result) => res.status(200).send(result))
       .catch((err) => res.status(500).send(err?.message));
   },
+  async editCategory(req, res) {
+    const { id } = req.params;
+
+    const newCategoryName = req.body;
+    try {
+      const productCategory = await db.ProductCategory.findByPk(id);
+
+      if (!productCategory) throw new Error("Product category name not found!");
+
+      await productCategory
+        .update({ ...newCategoryName })
+        .then((result) =>
+          res.json({
+            status: 200,
+            message: "Category name berhasil di edit",
+            newCategory: result,
+          })
+        )
+        .catch((err) => res.status(400).send(err?.message));
+    } catch (err) {
+      res.json({
+        status: 500,
+        message: err?.message,
+      });
+    }
+  },
   async getCategoryByQuery(req, res) {
     try {
       const category_name = req.query;

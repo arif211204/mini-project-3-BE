@@ -277,22 +277,33 @@ const productControllers = {
       console.log(category);
     }
   },
+  async getProductWithCategory(req, res) {
+    const { categoryid_product } = req.query;
 
-  async editCategoryProduct(req, res) {
-    const { categoryId, categoryName } = req.query;
-    const find = {
-      category_id: { [db.Sequelize.Op.like]: `%${categoryId}%` },
-    };
+    try {
+      const categoryProduct = await db.Product.findAll({
+        where: { category_id: categoryid_product },
+        include: { model: db.ProductCategory, attributes: ["category_name"] },
+      });
 
-    const category = await db.Product.findAll({
-      where: { ...find },
-      include: { model: db.ProductCategory, attributes: ["category_name"] },
-    });
+      res.json({ status: 200, product: categoryProduct });
+    } catch (err) {
+      res.json({ status: 500, message: err?.message });
+    }
+  },
+  async editCategoryInProduct(req, res) {
+    const { id } = req.params;
+    const newCategory_id = req.body;
 
-    res.json({
-      status: 200,
-      category,
-    });
+    try {
+      const editProduct = await db.Product.findByPk(id);
+      await editProduct
+        .update({ ...newCategory_id })
+        .then((result) => res.json({ status: 200, newProduct: result }))
+        .catch((err) => res.json({ status: 500, message: err?.message }));
+    } catch (err) {
+      res.json({ status: 500, message: err?.message });
+    }
   },
 };
 
