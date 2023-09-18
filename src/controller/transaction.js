@@ -22,15 +22,21 @@ const transactionController = {
     const t = await db.sequelize.transaction();
 
     try {
+      const productsBought = req.body.products; // Array of Product
+
+      // Check if the products array is empty
+      if (productsBought.length === 0) {
+        await t.rollback();
+        return res.status(400).send("No products to create a transaction.");
+      }
+
       // Step 2: Create a transaction record with total_price
       transaction = await db.Transaction.create(
         {
-          total_price: 0, // You will calculate and update this later
+          total_price: 0, // calculate later
         },
         { transaction: t }
       );
-
-      const productsBought = req.body.products; // Assuming req.body.products contains an array of products bought
 
       // Step 3: Collect products bought and create transaction details
       const transactionDetails = [];
