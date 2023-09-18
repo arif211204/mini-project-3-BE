@@ -109,7 +109,7 @@ const productControllers = {
       //         });
       //         products = [...products, ...categoryProducts];
       //       }
-      res.status(200).json(products);
+      res.status(200).json(product);
       //res.json(product);
     } catch (err) {
       console.error(err);
