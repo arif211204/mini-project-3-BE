@@ -4,6 +4,8 @@ const {
   productRoutes,
   productcategoriyRoutes,
   orderRoutes,
+  transactionDetailRoutes,
+  transactionRoutes,
 } = require("./routes");
 const cors = require("cors");
 require("dotenv").config();
@@ -23,6 +25,8 @@ app.use("/products", productRoutes);
 app.use("/static", express.static(`${__dirname}/public/images/product`));
 app.use("/productcategory", productcategoriyRoutes);
 app.use("/orders", orderRoutes);
+app.use("/transactions", transactionRoutes);
+app.use("/transactiondetails", transactionDetailRoutes);
 
 app.listen(PORT, () => {
   console.log(`server running on PORT: 🚀${PORT}🚀`);

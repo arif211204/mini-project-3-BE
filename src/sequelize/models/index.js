@@ -53,6 +53,7 @@ db.Product = require("./product")(sequelize, Sequelize);
 db.Order = require("./order")(sequelize, Sequelize);
 db.Transaction = require("./transaction.js")(sequelize, Sequelize);
 db.ProductCategory = require("./productcategory")(sequelize, Sequelize);
+db.TransactionDetail = require("./transactiondetail")(sequelize, Sequelize);
 
 db.User.associate(db);
 db.Role.associate(db);
@@ -60,5 +61,6 @@ db.Product.associate(db);
 db.Order.associate(db);
 db.Transaction.associate(db);
 db.ProductCategory.associate(db);
+db.TransactionDetail.associate(db);
 
 module.exports = db;
