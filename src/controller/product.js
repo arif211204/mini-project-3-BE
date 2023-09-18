@@ -3,6 +3,7 @@ const db = require("../sequelize/models");
 const jwt = require("jsonwebtoken");
 
 const productControllers = {
+  // async getAll(req, res) {
   // getAll(req, res) {
   //   db.Product.findAll({
   //     order: [["updatedAt", "DESC"]],
@@ -77,7 +78,39 @@ const productControllers = {
         limit: parseInt(pageSize),
         offset: offset,
       });
-      res.json(product);
+      //     const { product_name, category_id, page, pageSize } = req.query;
+      //     const offset = (page - 1) * pageSize;
+
+      //     try {
+      //       let products = [];
+
+      //       if (product_name) {
+      //         products = await db.Product.findAll({
+      //           where: {
+      //             product_name: {
+      //               [db.Sequelize.Op.like]: `%${product_name}%`,
+      //             },
+      //           },
+      //           limit: parseInt(pageSize),
+      //           offset: offset,
+      //         });
+      //       }
+
+      //       if (category_id) {
+      //         const categoryProducts = await db.Product.findAll({
+      //           where: {
+      //             category_id: {
+      //               [db.Sequelize.Op.like]: `%${category_id}%`,
+      //             },
+      //           },
+
+      //           limit: parseInt(pageSize),
+      //           offset: offset,
+      //         });
+      //         products = [...products, ...categoryProducts];
+      //       }
+      res.status(200).json(products);
+      //res.json(product);
     } catch (err) {
       console.error(err);
       res.status(500).send("Error retrieving products.");
@@ -152,14 +185,15 @@ const productControllers = {
         const dataToken = jwt.verify(token, process.env.jwt_secret);
         userId = dataToken.id;
       }
-      const productData = req.body;
+      // const productData = req.body;
 
-      if (req.file) {
-        productData.image = req.file.filename;
-      }
-      productData.userid = userId;
+      // if (req.file) {
+      //   productData.image = req.file.filename;
+      // }
+      // productData.userid = userId;
+      req.body.image = req.file.filename;
 
-      const productCreation = await db.Product.create(productData);
+      const productCreation = await db.Product.create({ ...req.body });
       res.status(200).json({
         message: "Berhasil Membuat Produk!",
         productCreation,
@@ -181,6 +215,9 @@ const productControllers = {
     // }
     try {
       // const dataToken = jwt.verify(token, process.env.jwt_secret);
+      if (req.file) {
+        req.body.image = req.file.filename;
+      }
       const existingProduct = await db.Product.findByPk(id);
 
       if (!existingProduct) {
@@ -204,29 +241,29 @@ const productControllers = {
   async deleteProduct(req, res) {
     const { id } = req.params;
     const { token } = req;
-
-    if (!token) {
-      return res
-        .status(401)
-        .json({ message: `Harap Melakukan Login Terlebih Dahulu` });
-    }
+    // if (!token) {
+    //   return res
+    //     .status(401)
+    //     .json({ message: `Harap Melakukan Login Terlebih Dahulu` });
+    // }
     try {
-      const dataToken = jwt.verify(token, process.env.jwt_secret);
-      const existingProduct = await db.Product.destroy(id);
+      // const dataToken = jwt.verify(token, process.env.jwt_secret);
+      // const existingProduct = await db.Product.destroy(id);
+      const existingProduct = await db.Product.findByPk(id);
       if (!existingProduct) {
         return res
           .status(404)
           .json({ message: `Produk ID ${id} Tidak Ditemukan!` });
       }
-      if (existingProduct.userid !== dataToken.id) {
-        return res
-          .status(403)
-          .json({ message: `Tidak Diizinkan: Kamu Bukan Administrator!` });
-      }
+      // if (existingProduct.userid !== dataToken.id) {
+      //   return res
+      //     .status(403)
+      //     .json({ message: `Tidak Diizinkan: Kamu Bukan Administrator!` });
+      // }
       await existingProduct.destroy();
       res.status(200).json({ message: `Produk ID ${id} Berhasil Dihapus!` });
     } catch (err) {
-      console.log(err);
+      console.log("Error deleting product:", err);
       res.status(500).send(err?.message);
     }
   },

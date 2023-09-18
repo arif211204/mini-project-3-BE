@@ -2,6 +2,7 @@ const express = require("express");
 const productControllers = require("../controller/product");
 const isAdmin = require("../middlewares/adminValidator");
 const uploadFile = require("../middlewares/multer");
+const productMulter = require("../middlewares/multer");
 const route = express.Router();
 
 route.get("/", productControllers.getAllWithCategory);
@@ -15,20 +16,12 @@ route.get("/:id", productControllers.getProductById);
 route.patch("/", productControllers.editCategoryProduct);
 route.post(
   "/",
-  uploadFile({
-    destinationFolder: "product",
-    prefix: "New-Product",
-    filetype: "image",
-  }).single("image"),
+  productMulter.productImageUploader().single("image"),
   productControllers.createProduct
 );
 route.patch(
   "/:id",
-  uploadFile({
-    destinationFolder: "product",
-    prefix: "New-Product",
-    filetype: "image",
-  }).single("image"),
+  productMulter.productImageUploader().single('image'),
   productControllers.editProduct
 );
 route.delete("/:id", productControllers.deleteProduct);
