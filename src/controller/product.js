@@ -3,15 +3,15 @@ const db = require("../sequelize/models");
 const jwt = require("jsonwebtoken");
 
 const productControllers = {
-//   getAll(req, res) {
-//     db.Product.findAll({
-//       order: [["updatedAt", "DESC"]],
-//     })
-//       .then((result) => {
-//         res.send(result);
-//       })
-//       .catch((err) => {
-//         res.status(500).send(err?.message);
+  //   getAll(req, res) {
+  //     db.Product.findAll({
+  //       order: [["updatedAt", "DESC"]],
+  //     })
+  //       .then((result) => {
+  //         res.send(result);
+  //       })
+  //       .catch((err) => {
+  //         res.status(500).send(err?.message);
   async getAll(req, res) {
     try {
       const page = parseInt(req.query.page) || 1;
@@ -77,37 +77,37 @@ const productControllers = {
         },
         ...sorting,
       });
-//     const { product_name, category_id, page, pageSize } = req.query;
-//     const offset = (page - 1) * pageSize;
+      //     const { product_name, category_id, page, pageSize } = req.query;
+      //     const offset = (page - 1) * pageSize;
 
-//     try {
-//       let products = [];
+      //     try {
+      //       let products = [];
 
-//       if (product_name) {
-//         products = await db.Product.findAll({
-//           where: {
-//             product_name: {
-//               [db.Sequelize.Op.like]: `%${product_name}%`,
-//             },
-//           },
-//           limit: parseInt(pageSize),
-//           offset: offset,
-//         });
-//       }
+      //       if (product_name) {
+      //         products = await db.Product.findAll({
+      //           where: {
+      //             product_name: {
+      //               [db.Sequelize.Op.like]: `%${product_name}%`,
+      //             },
+      //           },
+      //           limit: parseInt(pageSize),
+      //           offset: offset,
+      //         });
+      //       }
 
-//       if (category_id) {
-//         const categoryProducts = await db.Product.findAll({
-//           where: {
-//             category_id: {
-//               [db.Sequelize.Op.like]: `%${category_id}%`,
-//             },
-//           },
+      //       if (category_id) {
+      //         const categoryProducts = await db.Product.findAll({
+      //           where: {
+      //             category_id: {
+      //               [db.Sequelize.Op.like]: `%${category_id}%`,
+      //             },
+      //           },
 
-//           limit: parseInt(pageSize),
-//           offset: offset,
-//         });
-//         products = [...products, ...categoryProducts];
-//       }
+      //           limit: parseInt(pageSize),
+      //           offset: offset,
+      //         });
+      //         products = [...products, ...categoryProducts];
+      //       }
       res.status(200).json(products);
     } catch (err) {
       console.error(err);
@@ -183,14 +183,15 @@ const productControllers = {
         const dataToken = jwt.verify(token, process.env.jwt_secret);
         userId = dataToken.id;
       }
-      const productData = req.body;
+      // const productData = req.body;
 
-      if (req.file) {
-        productData.image = req.file.filename;
-      }
-      productData.userid = userId;
+      // if (req.file) {
+      //   productData.image = req.file.filename;
+      // }
+      // productData.userid = userId;
+      req.body.image = req.file.filename;
 
-      const productCreation = await db.Product.create(productData);
+      const productCreation = await db.Product.create({ ...req.body });
       res.status(200).json({
         message: "Berhasil Membuat Produk!",
         productCreation,
@@ -213,7 +214,7 @@ const productControllers = {
     try {
       // const dataToken = jwt.verify(token, process.env.jwt_secret);
       if (req.file) {
-        productData.image = req.file.filename;
+        req.body.image = req.file.filename;
       }
       const existingProduct = await db.Product.findByPk(id);
 
