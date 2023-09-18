@@ -16,29 +16,14 @@ module.exports = {
 
     await queryInterface.bulkInsert("transactions", [
       {
-        cashier_id: 2,
-        customer_name: "ujang simo",
-        product_id: 2,
-        total_price: 230000,
-        transaction_date: Sequelize.fn("NOW"),
+        no_inv: "INV-01-%d&fs$fvd&v645njd&76464@",
+        total_price: 30000,
         createdAt: Sequelize.fn("NOW"),
         updatedAt: Sequelize.fn("NOW"),
       },
       {
-        cashier_id: 2,
-        customer_name: "udin jani",
-        product_id: 3,
-        total_price: 230000,
-        transaction_date: Sequelize.fn("NOW"),
-        createdAt: Sequelize.fn("NOW"),
-        updatedAt: Sequelize.fn("NOW"),
-      },
-      {
-        cashier_id: 3,
-        customer_name: "daniel",
-        product_id: 4,
-        total_price: 230000,
-        transaction_date: Sequelize.fn("NOW"),
+        no_inv: "INV-01-%dabf6567^%&sdhfh&v645njd&76464@",
+        total_price: 50000,
         createdAt: Sequelize.fn("NOW"),
         updatedAt: Sequelize.fn("NOW"),
       },
@@ -46,11 +31,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+    return queryInterface.bulkDelete("transactions", null, {});
   },
 };

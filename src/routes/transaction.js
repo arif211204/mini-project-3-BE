@@ -1,7 +1,10 @@
 const express = require("express");
-const transactionController = require("../controller/transaction");
+const transactionControllers = require("../controller/transaction");
 const route = express.Router();
 
-route.get("/", transactionController.getTransactionByDateRange);
+// route.get("/", transactionDetailControllers.getAll);
+route.get("/:id", transactionControllers.getProductByTransaction);
+
+route.post("/create", transactionControllers.createTransaction);
 
 module.exports = route;
