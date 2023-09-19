@@ -185,6 +185,31 @@ const userControllers = {
       return res.status(500).send(error?.message);
     }
   },
+
+  async changePasswordCashier(req, res) {
+    try {
+      const { email, newPassword } = req.body;
+      const newHashedPassword = await bcrypt.hash(newPassword, 10);
+      // console.log("newHashedPassword", newHashedPassword);
+
+      const response = await db.User.update(
+        {
+          password: newHashedPassword,
+        },
+        {
+          where: { email: req.params.email },
+        }
+      );
+
+      console.log("newPassword: ", newPassword);
+
+      return res
+        .status(200)
+        .send({ message: "success updated password", data: response });
+    } catch (error) {
+      return res.status(500).send(error?.message);
+    }
+  },
 };
 
 module.exports = userControllers;
