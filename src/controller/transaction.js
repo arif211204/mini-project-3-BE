@@ -11,22 +11,22 @@ const transactionController = {
     }
   },
 
-  async getTotalSales(req,res) {
+  async getTotalSales(req, res) {
     try {
       const salesTotal = await db.Transaction.sum("total_price");
-      res.json({salesTotal});
+      res.json({ salesTotal });
     } catch (err) {
       console.log(err);
-      res.status(500).send("Error Fetching Transaction Total")
+      res.status(500).send("Error Fetching Transaction Total");
     }
   },
-  async getTransactionTotal (req,res) {
+  async getTransactionTotal(req, res) {
     try {
       const transactionTotal = await db.Transaction.count();
-      res.json({transactionTotal});
+      res.json({ transactionTotal });
     } catch (err) {
       console.log(err);
-      res.status(500).send('Transaction Total Error');
+      res.status(500).send("Transaction Total Error");
     }
   },
 
@@ -108,7 +108,7 @@ const transactionController = {
           ],
         ], */
         where: { transaction_id: transaction.id },
-        include: [{ model: db.Product, as: "product" }],
+        include: [{ model: db.Product }],
         raw: true, // Use raw:true to get a plain JSON result
         transaction: t,
       });
