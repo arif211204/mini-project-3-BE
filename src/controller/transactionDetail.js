@@ -20,11 +20,13 @@ const transactionDetailController = {
     }
   },
   async getTotalSoldProductsByCategory(req, res) {
+    const { dateFrom, dateTo } = req.query;
     try {
       const totalSoldProductsByCategory = await db.sequelize.query(
         `
         SELECT
           pc.category_name,
+          MAX(p.createdAt) as latest_created_at,
           SUM(td.quantity) as total_sold
         FROM
           TransactionDetails td
@@ -32,10 +34,18 @@ const transactionDetailController = {
           Products p ON td.product_id = p.id
         JOIN
           ProductCategories pc ON p.category_id = pc.id
+        WHERE
+          p.createdAt >= :dateFrom AND p.createdAt <= :dateTo
         GROUP BY
-          pc.category_name;
+          pc.category_name
+        ORDER BY
+          latest_created_at ASC; 
         `,
         {
+          replacements: {
+            dateFrom: dateFrom,
+            dateTo: dateTo,
+          },
           type: db.sequelize.QueryTypes.SELECT,
         }
       );
@@ -46,6 +56,7 @@ const transactionDetailController = {
       res.status(500).send(error.message);
     }
   },
+
   async getProductByTransactionDetail(req, res) {
     try {
       const response = await db.TransactionDetail.findByPk(req.params.id, {

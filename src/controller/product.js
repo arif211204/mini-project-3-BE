@@ -60,6 +60,7 @@ const productControllers = {
         [db.Sequelize.Op.like]: `%${product_name}%`,
       },
     };
+
     if (category_id)
       search.category_id = {
         [db.Sequelize.Op.like]: `%${category_id}%`,
@@ -73,7 +74,7 @@ const productControllers = {
     }
     try {
       console.log(search);
-      const product = await db.Product.findAll({
+      const product = await db.Product.findAndCountAll({
         where: {
           ...search,
         },
@@ -81,6 +82,7 @@ const productControllers = {
         limit: parseInt(pageSize),
         offset: offset,
       });
+      const totalPages = Math.ceil(product.count / pageSize);
       //     const { product_name, category_id, page, pageSize } = req.query;
       //     const offset = (page - 1) * pageSize;
 
@@ -112,7 +114,12 @@ const productControllers = {
       //         });
       //         products = [...products, ...categoryProducts];
       //       }
-      res.status(200).json(product);
+      res.status(200).json({
+        status: 200,
+        product: product.rows,
+        count: product.count,
+        totalPages,
+      });
       //res.json(product);
     } catch (err) {
       console.error(err);
