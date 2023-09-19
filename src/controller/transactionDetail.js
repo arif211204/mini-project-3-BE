@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const db = require("../sequelize/models");
 
 const transactionDetailController = {
@@ -22,8 +23,7 @@ const transactionDetailController = {
   async getTotalSoldProductsByCategory(req, res) {
     const { dateFrom, dateTo } = req.query;
     try {
-      const totalSoldProductsByCategory = await db.sequelize.query(
-        `
+      let query = `
         SELECT
           pc.category_name,
           MAX(p.createdAt) as latest_created_at,
@@ -35,20 +35,28 @@ const transactionDetailController = {
         JOIN
           ProductCategories pc ON p.category_id = pc.id
         WHERE
-          p.createdAt >= :dateFrom AND p.createdAt <= :dateTo
+          p.createdAt >= :dateFrom`;
+
+      const replacements = {
+        dateFrom: dateFrom,
+      };
+
+      if (dateTo) {
+        query += ` AND p.createdAt <= :dateTo`;
+        replacements.dateTo = dateTo;
+      }
+
+      query += `
         GROUP BY
           pc.category_name
         ORDER BY
-          latest_created_at ASC; 
-        `,
-        {
-          replacements: {
-            dateFrom: dateFrom,
-            dateTo: dateTo,
-          },
-          type: db.sequelize.QueryTypes.SELECT,
-        }
-      );
+          latest_created_at ASC;
+      `;
+
+      const totalSoldProductsByCategory = await db.sequelize.query(query, {
+        replacements,
+        type: db.sequelize.QueryTypes.SELECT,
+      });
 
       res.json(totalSoldProductsByCategory);
     } catch (error) {
@@ -70,6 +78,57 @@ const transactionDetailController = {
       return res.status(200).send(response);
     } catch (error) {
       res.status(500).send(error?.message);
+    }
+  },
+
+  async getTransactionDetailsByDate(req, res) {
+    try {
+      const { dateFrom, dateTo } = req.query;
+      if (dateFrom && dateTo) {
+        const transactionDetails = await db.TransactionDetail.findAll({
+          where: {
+            createdAt: {
+              [Op.gte]: new Date(dateFrom + "T00:00:00Z"),
+              [Op.lte]: new Date(dateTo + "T23:59:59Z"), // Gunakan dateTo sebagai tanggal batas atas
+            },
+          },
+          include: [
+            {
+              model: db.Product,
+              include: [
+                {
+                  model: db.ProductCategory,
+                },
+              ],
+            },
+          ],
+        });
+        return res.status(200).send(transactionDetails);
+      } else {
+        const transactionDetails = await db.TransactionDetail.findAll({
+          where: {
+            createdAt: {
+              [Op.gte]: new Date(dateFrom + "T00:00:00Z"),
+              [Op.lte]: new Date(dateFrom + "T23:59:59Z"), // Gunakan dateTo sebagai tanggal batas atas
+            },
+          },
+          include: [
+            {
+              model: db.Product,
+              include: [
+                {
+                  model: db.ProductCategory,
+                },
+              ],
+            },
+          ],
+        });
+
+        return res.status(200).send(transactionDetails);
+      }
+    } catch (error) {
+      console.error("Error fetching transaction details by date:", error);
+      res.status(500).send(error.message);
     }
   },
 };
