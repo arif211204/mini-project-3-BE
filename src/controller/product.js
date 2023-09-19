@@ -20,14 +20,17 @@ const productControllers = {
       const offset = (page - 1) * pageSize;
       console.log(parseInt(offset), "ini offset");
       console.log(page, pageSize);
-      const products = await db.Product.findAll({
+      const products = await db.Product.findAndCountAll({
         where: { category_id: category_id },
         limit: parseInt(pageSize),
         offset: offset,
       });
+      const totalPages = Math.ceil(products.count / pageSize);
       res.json({
         status: 200,
-        products,
+        products: products.rows,
+        count: products.count,
+        totalPages,
       });
     } catch (err) {
       res.json({
