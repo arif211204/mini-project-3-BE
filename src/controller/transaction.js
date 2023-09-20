@@ -1,7 +1,36 @@
 const db = require("../sequelize/models");
 
 const transactionController = {
-  async getTransactionByDateRange(req, res) {},
+  async getAll(req, res) {
+    try {
+      const response = await db.Transaction.findAll();
+      return res.status(200).json(response);
+    } catch (err) {
+      console.log(err);
+      res.status(500).send("Error retrieving transactions");
+    }
+  },
+
+  async getTotalSales(req, res) {
+    try {
+      const salesTotal = await db.Transaction.sum("total_price");
+      res.json({ salesTotal });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send("Error Fetching Transaction Total");
+    }
+  },
+  async getTransactionTotal(req, res) {
+    try {
+      const transactionTotal = await db.Transaction.count();
+      res.json({ transactionTotal });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send("Transaction Total Error");
+    }
+  },
+
+  // async getTransactionByDateRange(req, res) {},
 
   async getProductByTransaction(req, res) {
     try {
@@ -81,7 +110,12 @@ const transactionController = {
       // Calculate total price based on the sum of product prices
       const totalProductSold = await db.TransactionDetail.findAll({
         where: { transaction_id: transaction.id },
+
         include: [{ model: db.Product, as: "product" }],
+
+        include: [{ model: db.Product }],
+        raw: true, // Use raw:true to get a plain JSON result
+
         transaction: t,
       });
 

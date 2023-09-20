@@ -8,7 +8,6 @@ module.exports = (sequelize, DataTypes) => {
       });
       TransactionDetail.belongsTo(models.Product, {
         foreignKey: "product_id",
-        as: "product",
       });
     }
   }
