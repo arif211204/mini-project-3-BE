@@ -319,15 +319,23 @@ const productControllers = {
   //transaction
   async getProductSearch(req, res) {
     const { product_name } = req.query;
-
     try {
-      const result = await db.Product.findAll({
-        where: {
-          product_name: { [Op.like]: `%${product_name}%` },
-        },
-      });
+      if (product_name == "") {
+        const result = await db.Product.findAll({
+          where: {
+            product_name: { [Op.like]: `%-%` },
+          },
+        });
+        res.status(200).send(result);
+      } else {
+        const result = await db.Product.findAll({
+          where: {
+            product_name: { [Op.like]: `%${product_name}%` },
+          },
+        });
 
-      res.status(200).send(result);
+        res.status(200).send(result);
+      }
     } catch (err) {
       res.status(500).send(err?.message);
     }
