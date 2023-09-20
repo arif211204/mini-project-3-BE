@@ -23,19 +23,40 @@ const transactionDetailController = {
   async getTotalSoldProductsByCategory(req, res) {
     const { dateFrom, dateTo } = req.query;
     try {
-      let query = `
-        SELECT
-          pc.category_name,
-          MAX(p.createdAt) as latest_created_at,
-          SUM(td.quantity) as total_sold
-        FROM
-          TransactionDetails td
-        JOIN
-          Products p ON td.product_id = p.id
-        JOIN
-          ProductCategories pc ON p.category_id = pc.id
-        WHERE
-          p.createdAt >= :dateFrom`;
+      let query =
+        //`
+        // SELECT
+        //   pc.category_name,
+        //   MAX(p.createdAt) as latest_created_at,
+        //   SUM(td.quantity) as total_sold
+        // FROM
+        //   TransactionDetails td
+        // JOIN
+        //   Products p ON td.product_id = p.id
+        // JOIN
+        //   ProductCategories pc ON p.category_id = pc.id
+        // WHERE
+        //   p.createdAt >= :dateFrom`;
+
+        `SELECT
+        pc.id,
+  pc.category_name,
+  SUM(td.quantity) as total_sold,
+  SUM(td.quantity * p.price) as total_price
+FROM
+  TransactionDetails td
+JOIN
+  Products p ON td.product_id = p.id
+JOIN
+  ProductCategories pc ON p.category_id = pc.id
+JOIN
+  Transactions t ON td.transaction_id = t.id
+WHERE
+  t.createdAt >= :dateFrom
+  AND t.createdAt <= :dateTo
+GROUP BY
+  pc.id,
+  pc.category_name;`;
 
       const replacements = {
         dateFrom: dateFrom,
@@ -128,6 +149,69 @@ const transactionDetailController = {
       }
     } catch (error) {
       console.error("Error fetching transaction details by date:", error);
+      res.status(500).send(error.message);
+    }
+  },
+  async getTotalSoldProductsByCategoryByDate(req, res) {
+    try {
+      const { dateFrom, dateTo } = req.query;
+
+      const transactions = await db.Transaction.findAll({
+        where: {
+          createdAt: {
+            [Op.between]: [dateFrom + " 00:00:00", dateTo + " 23:59:59"],
+          },
+        },
+        include: [
+          {
+            model: db.TransactionDetail,
+            include: [
+              {
+                model: db.Product,
+                include: [
+                  {
+                    model: db.ProductCategory,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      const categories = {};
+
+      transactions.forEach((transaction) => {
+        transaction.TransactionDetails.forEach((transactionDetail) => {
+          const category =
+            transactionDetail.Product.ProductCategory.category_name;
+          const quantity = transactionDetail.quantity;
+          const price = transactionDetail.Product.price;
+
+          if (!categories[category]) {
+            categories[category] = {
+              total_sold: 0,
+              total_price: 0,
+            };
+          }
+
+          categories[category].total_sold += quantity;
+          categories[category].total_price += quantity * price;
+        });
+      });
+
+      const categoryData = Object.keys(categories).map((category) => ({
+        category_name: category,
+        total_sold: categories[category].total_sold,
+        total_price: categories[category].total_price,
+      }));
+
+      res.json(categoryData);
+    } catch (error) {
+      console.error(
+        "Error fetching total sold products by category by date:",
+        error
+      );
       res.status(500).send(error.message);
     }
   },
