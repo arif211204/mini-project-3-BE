@@ -42,7 +42,7 @@ const transactionController = {
       const transactionDetails = [];
       for (const product of productsBought) {
         const productInfo = await db.Product.findByPk(product.id);
-        // Ensure that the product exists and has a price
+
         if (!productInfo || !productInfo.price) {
           await t.rollback();
           return res.status(400).send("No products to create a transaction.");
@@ -53,7 +53,7 @@ const transactionController = {
           await t.rollback();
           return res
             .status(400)
-            .send(`Product "${productInfo.name}" is out of stock.`);
+            .send(`Product "${productInfo.product_name}" is out of stock.`);
         }
 
         // Calculate the unit price based on the product's price
