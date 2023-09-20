@@ -12,6 +12,8 @@ route.get("/name-sorting", productControllers.getProductByNameSorting);
 route.get("/price-sorting", productControllers.getProductsByPriceSorting);
 route.get("/category-sorting", productControllers.getProductByCategorySorting);
 route.get("/stock-sorting", productControllers.getProductByStockSorting);
+//transaction
+route.get("/find", productControllers.getProductSearch);
 route.get("/:id", productControllers.getProductById);
 
 route.patch(

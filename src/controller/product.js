@@ -315,6 +315,23 @@ const productControllers = {
       res.json({ status: 500, message: err?.message });
     }
   },
+
+  //transaction
+  async getProductSearch(req, res) {
+    const { product_name } = req.query;
+
+    try {
+      const result = await db.Product.findAll({
+        where: {
+          product_name: { [Op.like]: `%${product_name}%` },
+        },
+      });
+
+      res.status(200).send(result);
+    } catch (err) {
+      res.status(500).send(err?.message);
+    }
+  },
 };
 
 module.exports = productControllers;
