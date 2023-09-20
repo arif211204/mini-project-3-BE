@@ -6,6 +6,7 @@ route.get("/", transactionDetailControllers.getAll);
 // route.get("/bydate", transactionDetailControllers.getTransactionDetailsByDate);
 route.get("/bydate", transactionDetailControllers.getTotalSoldProductsByCategoryByDate);
 route.get("/total-sold", transactionDetailControllers.getTotalSoldProduct);
+route.get("/soldproducts", transactionDetailControllers.getMostSoldProduct);
 route.get(
   "/soldproductcategory",
   transactionDetailControllers.getTotalSoldProductsByCategory
