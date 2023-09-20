@@ -53,11 +53,11 @@ const transactionController = {
     try {
       const productsBought = req.body.products; // Array of Product
 
-      // Check if the products array is empty
+      /*       // proteksi stok product 0
       if (productsBought.length === 0) {
         await t.rollback();
         return res.status(400).send("No products to create a transaction.");
-      }
+      } */
 
       // Step 2: Create a transaction record with total_price
       transaction = await db.Transaction.create(
@@ -71,12 +71,20 @@ const transactionController = {
       const transactionDetails = [];
       for (const product of productsBought) {
         const productInfo = await db.Product.findByPk(product.id);
-        // Ensure that the product exists and has a price
+
         if (!productInfo || !productInfo.price) {
-          // Handle the case where the product doesn't exist or doesn't have a price
-          // You might want to return an error or log it
-          continue; // Skip this product and move on to the next one
+          await t.rollback();
+          return res.status(400).send("No products to create a transaction.");
         }
+
+        // proteksi stock 0
+        if (productInfo.stock < 1) {
+          await t.rollback();
+          return res
+            .status(400)
+            .send(`Product "${productInfo.product_name}" is out of stock.`);
+        }
+
         // Calculate the unit price based on the product's price
         const unitPrice = productInfo.price;
 
@@ -101,19 +109,17 @@ const transactionController = {
 
       // Calculate total price based on the sum of product prices
       const totalProductSold = await db.TransactionDetail.findAll({
-        /* attributes: [
-          [
-            db.sequelize.fn("SUM", db.sequelize.col("product.price")),
-            "total_price",
-          ],
-        ], */
         where: { transaction_id: transaction.id },
+
+        include: [{ model: db.Product, as: "product" }],
+
         include: [{ model: db.Product }],
         raw: true, // Use raw:true to get a plain JSON result
+
         transaction: t,
       });
 
-      // Calculate total price based on the sum of (unit_price * quantity)
+      // Calculate total price in table transaction from transactiondetails
       const totalPrice = totalProductSold.reduce((total, productDetail) => {
         const unitPrice = productDetail.unit_price;
         const quantity = productDetail.quantity;
@@ -132,7 +138,6 @@ const transactionController = {
         totalPrice: totalPrice,
       });
     } catch (error) {
-      // Rollback the transaction if an error occurs
       await t.rollback();
       res.send(error?.message);
     }

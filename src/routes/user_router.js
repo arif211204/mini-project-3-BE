@@ -13,6 +13,7 @@ route.get("/cashier", userControllers.getAllCashier);
 route.get("/:id", userControllers.getUserById);
 
 route.patch("/disable", userControllers.disableCashier);
+route.patch("/changePassword/:email", userControllers.changePasswordCashier);
 
 route.delete("/delete/:email", userControllers.delete);
 
