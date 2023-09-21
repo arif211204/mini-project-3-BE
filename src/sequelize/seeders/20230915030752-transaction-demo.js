@@ -14,7 +14,7 @@ module.exports = {
      * }], {});
      */
 
-    await queryInterface.bulkInsert("transactions", [
+    await queryInterface.bulkInsert("Transactions", [
       {
         no_inv: "INV-01-%d&fs$fvd&v645njd&76464@",
         total_price: 30000,
@@ -31,6 +31,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    return queryInterface.bulkDelete("transactions", null, {});
+    return queryInterface.bulkDelete("Transactions", null, {});
   },
 };
