@@ -12,7 +12,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-    await queryInterface.bulkInsert("products", [
+    await queryInterface.bulkInsert("Products", [
       {
         image:
           "https://content.jdmagicbox.com/comp/palakkad/z9/9999px491.x491.110302132630.s3z9/catalogue/arc-cofe-say-palakkad-coffee-shops-833hy.jpg?clr=",

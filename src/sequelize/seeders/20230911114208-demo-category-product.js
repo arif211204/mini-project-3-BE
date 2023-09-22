@@ -12,7 +12,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-    await queryInterface.bulkInsert("productcategories", [
+    await queryInterface.bulkInsert("ProductCategories", [
       {
         category_name: "coffee",
         createdAt: Sequelize.fn("now"),
