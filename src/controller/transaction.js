@@ -69,8 +69,8 @@ const transactionController = {
           return res.status(400).send("No products to create a transaction.");
         }
 
-        // proteksi stock 0
-        if (productInfo.stock < 1) {
+        // proteksi stock < qty
+        if (productInfo.stock <= product.quantity - 1) {
           await t.rollback();
           return res
             .status(400)
