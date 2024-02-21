@@ -19,11 +19,28 @@ const pool = mysql.createPool({
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
 });
-
 app.use(express.json());
 const db = require('./models');
 app.use(cors());
 
+
+
+app.get('/', (req, res) => {
+  res.send('welcome to Mini Project 3 API');
+});
+
+app.use('/users', userRoutes);
+app.use('/products', productRoutes);
+app.use('/static', express.static(`${__dirname}/public/images/product`));
+app.use('/productcategories', productcategoriyRoutes);
+app.use('/transactions', transactionRoutes);
+app.use('/transactiondetails', transactionDetailRoutes);
+
+app.listen(PORT, () => {
+  console.log(`server running on PORT: 🚀${PORT}🚀`);
+
+  db.sequelize.sync({ alter: true });
+});
 app.use((req, res, next) => {
   pool.getConnection((err, connection) => {
     if (err) {
@@ -43,21 +60,4 @@ app.use((req, res, next) => {
     req.dbConnection.release();
   }
   next();
-});
-
-app.get('/', (req, res) => {
-  res.send('welcome to Mini Project 3 API');
-});
-
-app.use('/users', userRoutes);
-app.use('/products', productRoutes);
-app.use('/static', express.static(`${__dirname}/public/images/product`));
-app.use('/productcategories', productcategoriyRoutes);
-app.use('/transactions', transactionRoutes);
-app.use('/transactiondetails', transactionDetailRoutes);
-
-app.listen(PORT, () => {
-  console.log(`server running on PORT: 🚀${PORT}🚀`);
-
-  // db.sequelize.sync({ alter: true });
 });
