@@ -1,13 +1,13 @@
-"use strict";
+'use strict';
 
-const fs = require("fs");
-const path = require("path");
-const Sequelize = require("sequelize");
-const process = require("process");
+const fs = require('fs');
+const path = require('path');
+const Sequelize = require('sequelize');
+
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || "development";
-const db = {};
+const env = process.env.NODE_ENV || 'development';
 
+// Load your environment variables here
 const database = process.env.MYSQL_DATABASE;
 const username = process.env.MYSQL_USER;
 const password = process.env.MYSQL_PASSWORD;
@@ -20,19 +20,21 @@ const config = {
   password,
   host,
   port,
-  dialect: 'mysql', 
+  dialect: 'mysql',
 };
+
+const db = {};
+
 const sequelize = new Sequelize(config);
 
 fs.readdirSync(__dirname)
-  .filter((file) => {
-    return (
-      file.indexOf(".") !== 0 &&
+  .filter(
+    (file) =>
+      file.indexOf('.') !== 0 &&
       file !== basename &&
-      file.slice(-3) === ".js" &&
-      file.indexOf(".test.js") === -1
-    );
-  })
+      file.slice(-3) === '.js' &&
+      file.indexOf('.test.js') === -1
+  )
   .forEach((file) => {
     const model = require(path.join(__dirname, file))(
       sequelize,
@@ -49,19 +51,5 @@ Object.keys(db).forEach((modelName) => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-
-db.User = require("./user")(sequelize, Sequelize);
-db.Role = require("./role")(sequelize, Sequelize);
-db.Product = require("./product")(sequelize, Sequelize);
-db.Transaction = require("./transaction.js")(sequelize, Sequelize);
-db.ProductCategory = require("./productcategory")(sequelize, Sequelize);
-db.TransactionDetail = require("./transactiondetail")(sequelize, Sequelize);
-
-db.User.associate(db);
-db.Role.associate(db);
-db.Product.associate(db);
-db.Transaction.associate(db);
-db.ProductCategory.associate(db);
-db.TransactionDetail.associate(db);
 
 module.exports = db;
