@@ -19,6 +19,7 @@
   "name": "mini-project-3-be",
   "version": "1.0.0",
   "main": "src/index.js",
+  "type": "commonjs",
   "engines": {
     "node": "20.x"
   },
