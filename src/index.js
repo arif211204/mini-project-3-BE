@@ -10,7 +10,7 @@ const cors = require('cors');
 require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 2200;
-const mysql2 = require('mysql2');
+const mysql = require('mysql2');
 
 const pool = mysql.createPool({
   host: process.env.MYSQL_HOST,
