@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const db = require("../sequelize/models");
+const db = require("../models");
 const jwt = require("jsonwebtoken");
 
 const productControllers = {

@@ -1,5 +1,5 @@
 const { Op, Model, where } = require("sequelize");
-const db = require("../sequelize/models");
+const db = require("../models");
 
 const productCategoryController = {
   getAll(req, res) {

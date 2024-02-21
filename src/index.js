@@ -21,7 +21,7 @@ const pool = mysql.createPool({
 });
 
 app.use(express.json());
-const db = require('./sequelize/models');
+const db = require('./models');
 app.use(cors());
 
 app.use((req, res, next) => {

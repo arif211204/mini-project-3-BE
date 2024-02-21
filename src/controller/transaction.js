@@ -1,4 +1,4 @@
-const db = require("../sequelize/models");
+const db = require("../models");
 
 const transactionController = {
   async getAll(req, res) {
