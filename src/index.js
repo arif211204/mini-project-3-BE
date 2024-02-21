@@ -39,7 +39,7 @@ app.use('/transactiondetails', transactionDetailRoutes);
 app.listen(PORT, () => {
   console.log(`server running on PORT: 🚀${PORT}🚀`);
 
-  db.sequelize.sync({ alter: true });
+  // db.sequelize.sync({ alter: true });
 });
 app.use((req, res, next) => {
   pool.getConnection((err, connection) => {
