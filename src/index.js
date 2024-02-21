@@ -24,8 +24,6 @@ app.use(express.json());
 const db = require('./models');
 app.use(cors());
 
-
-console.log(pool);
 app.get('/', (req, res) => {
   res.send('welcome to Mini Project 3 API');
 });
